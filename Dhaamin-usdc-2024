@@ -1,0 +1,164 @@
+function findSearchTermInBooks(searchTerm, books) {
+  const searchTermLowerCase = searchTerm.toLowerCase();
+  const results = [];
+
+  for (const book of books) {
+    const ISBN = book.ISBN;
+    const bookTitle = book.Title;
+    const content = book.Content;
+
+    for (const line of content) {
+      const lineText = line.Text.toLowerCase();
+
+      if (lineText.includes(searchTermLowerCase)) {
+        results.push({
+          ISBN,
+          Page: line.Page,
+          Line: line.Line
+        });
+      }
+    }
+  }
+
+  return {
+    SearchTerm: searchTerm,
+    Results: results
+  };
+}
+
+const searchTerm = "the";
+
+const booksData = [
+  {
+    "Title": "Twenty Thousand Leagues Under the Sea",
+    "ISBN": "9780000528531",
+    "Content": [
+      {
+        "Page": 31,
+        "Line": 8,
+        "Text": "now simply went on by her own momentum. The dark-"
+      },
+      {
+        "Page": 31,
+        "Line": 9,
+        "Text": "ness was then profound; and however good the Canadian's"
+      },
+      {
+        "Page": 31,
+        "Line": 10,
+        "Text": "eyes were, I asked myself how he had managed to see, and"
+      }
+    ]
+  }
+  
+];
+
+const searchResult = findSearchTermInBooks(searchTerm, booksData);
+
+console.log(searchResult);
+
+
+
+
+const positiveTestResult = findSearchTermInBooks('the', [
+  {
+    "Title": "Twenty Thousand Leagues Under the Sea",
+    "ISBN": "9780000528531",
+    "Content": [
+      {
+        "Page": 31,
+        "Line": 8,
+        "Text": "now simply went on by her own momentum. The dark-"
+      },
+      {
+        "Page": 31,
+        "Line": 9,
+        "Text": "ness was then profound; and however good the Canadian's"
+      },
+      {
+        "Page": 31,
+        "Line": 10,
+        "Text": "eyes were, I asked myself how he had managed to see, and"
+      }
+    ]
+  }
+]);
+console.assert(
+  JSON.stringify(positiveTestResult) === JSON.stringify({
+    SearchTerm: 'The',
+    Results: [
+      {
+        ISBN: '9780000528531',
+        Page: 31,
+        Line: 9
+      }
+    ]
+  }),
+  'Positive Test is Failed'
+);
+
+const negativeTestResult = findSearchTermInBooks('nonexistent', [
+  {
+    "Title": "Twenty Thousand Leagues Under the Sea",
+    "ISBN": "9780000528531",
+    "Content": [
+      {
+        "Page": 31,
+        "Line": 8,
+        "Text": "now simply went on by her own momentum. The dark-"
+      },
+      {
+        "Page": 31,
+        "Line": 9,
+        "Text": "ness was then profound; and however good the Canadian's"
+      },
+      {
+        "Page": 31,
+        "Line": 10,
+        "Text": "eyes were, I asked myself how he had managed to see, and"
+      }
+    ]
+  }
+]);
+console.assert(
+  JSON.stringify(negativeTestResult) === JSON.stringify({
+    SearchTerm: 'nonexistent',
+    Results: []
+  }),
+  'Negative Test is Failed'
+);
+
+
+const caseSensitiveTest1 = findSearchTermInBooks('the', [
+  {
+    "Title": "Twenty Thousand Leagues Under the Sea",
+    "ISBN": "9780000528531",
+    "Content": [
+      {
+        "Page": 31,
+        "Line": 8,
+        "Text": "now simply went on by her own momentum. The dark-"
+      },
+      {
+        "Page": 31,
+        "Line": 9,
+        "Text": "ness was then profound; and however good the Canadian's"
+      },
+      {
+        "Page": 31,
+        "Line": 10,
+        "Text": "eyes were, I asked myself how he had managed to see, and"
+      }
+    ]
+  }
+]);
+console.assert(
+  JSON.stringify(caseSensitiveTest1) === JSON.stringify({
+    SearchTerm: 'The',
+    Results: []
+  }),
+  'Case-Sensitive Test 1 was Failed'
+);
+
+
+
